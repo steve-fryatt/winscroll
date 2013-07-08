@@ -1,0 +1,19 @@
+|>RunWS
+|
+| Obey file to configure and run the WinScroll module.
+| (c) Stephen Fryatt, 2002
+
+| Uncomment this line and set the sprite file path up correctly to use
+| alternative sprites.  Watch out for trailing spaces in the filename!
+|
+| Set WinScroll$Sprites <Obey$Dir>.Sprites
+
+RMRun <Obey$Dir>.WinScroll
+
+| Uncomment this line and set the options as required.  For example:
+| "-Speed 40 -Square" is a sensible set of options to do non-linear scrolls.
+| "-Speed 1" would produce faster linear scrolling than the default.
+| "-Modifier 9" would set the invocation to Select-Menu.
+| Use as many *WinScrollConfigure commands as required.
+|
+| WinScrollConfigure -Speed 40 -Square
