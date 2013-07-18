@@ -1,31 +1,65 @@
-REM >WinScrollSrc
-REM
-REM Windows Scroll Module
-REM (c) Stephen Fryatt, 2002
-REM
-REM Needs ExtBasAsm to assemble.
-REM 26/32 bit neutral
+; Copyright 2002-2013, Stephen Fryatt (info@stevefryatt.org.uk)
+;
+; This file is part of WinScroll:
+;
+;   http://www.stevefryatt.org.uk/software/
+;
+; Licensed under the EUPL, Version 1.1 only (the "Licence");
+; You may not use this work except in compliance with the
+; Licence.
+;
+; You may obtain a copy of the Licence at:
+;
+;   http://joinup.ec.europa.eu/software/page/eupl
+;
+; Unless required by applicable law or agreed to in
+; writing, software distributed under the Licence is
+; distributed on an "AS IS" basis, WITHOUT WARRANTIES
+; OR CONDITIONS OF ANY KIND, either express or implied.
+;
+; See the Licence for the specific language governing
+; permissions and limitations under the Licence.
 
-version$="0.51"
-save_as$="^.WinScroll"
+; WinScroll.s
+;
+; WinScroll Module Source
+;
+;  bit neutral
 
-LIBRARY "<Reporter$Dir>.AsmLib"
+;version$="0.51"
+;save_as$="^.WinScroll"
 
-PRINT "Assemble debug? (Y/N)"
-REPEAT
- g%=GET
-UNTIL (g% AND &DF)=ASC("Y") OR (g% AND &DF)=ASC("N")
-debug%=((g% AND &DF)=ASC("Y"))
+; ---------------------------------------------------------------------------------------------------------------------
+; Set up the Module Workspace
 
-ON ERROR PRINT REPORT$;" at line ";ERL : END
+WS_BlockSize		*	256
+WS_TargetSize		*	&500
 
-REM --------------------------------------------------------------------------------------------------------------------
-REM Set up workspace
+			^	0
+WS_Flags		#	4
+WS_IconDef		#	36
+WS_SpriteName		#	12
+WS_ScrollWindow		#	4
+WS_ScrollX		#	4
+WS_ScrollY		#	4
+WS_ConfigureSpeed	#	4
+WS_ConfigureButton	#	4
+WS_ConfigureKey		#	4
+WS_SpriteArea		#	4
+WS_TaskHandle		#	4
+WS_Quit			#	4
+WS_WindowHandle		#	4
+WS_Block		#	WS_BlockSize
+WS_Stack		#	WS_TargetSize - @
+
+WS_Size			*	@
+
+
 
 workspace_target%=&500
 workspace_size%=0 : REM This is updated.
 
-flags%=FNworkspace(workspace_size%,4)
+WS_Flags=FNworkspace(workspace_size%,4)
 icon_def%=FNworkspace(workspace_size%,36)
 sprite_name%=FNworkspace(workspace_size%,12)
 scroll_window%=FNworkspace(workspace_size%,4)
@@ -38,7 +72,7 @@ sprite_area%=FNworkspace(workspace_size%,4)
 task_handle%=FNworkspace(workspace_size%,4)
 quit%=FNworkspace(workspace_size%,4)
 win_handle%=FNworkspace(workspace_size%,4)
-block%=FNworkspace(workspace_size%,256)
+WS_Block=FNworkspace(workspace_size%,256)
 
 PRINT'"Stack size: ";workspace_target%-workspace_size%
 stack%=FNworkspace(workspace_size%,workspace_target%-workspace_size%)
@@ -186,7 +220,7 @@ EXT 1
           BNE       set_key
 
           LDR       R1,[R0,#1]
-          STR       R1,[R12,#configure_button%]
+          STR       R1,[R12,#WS_ConfigureButton]
 
 .set_key
           LDR       R0,[R2,#4]
@@ -198,7 +232,7 @@ EXT 1
           BNE       set_speed
 
           LDR       R1,[R0,#1]
-          STR       R1,[R12,#configure_key%]
+          STR       R1,[R12,#WS_ConfigureKey]
 
 .set_speed
           LDR       R0,[R2,#8]
@@ -210,25 +244,25 @@ EXT 1
           BNE       set_linear
 
           LDR       R1,[R0,#1]
-          STR       R1,[R12,#configure_speed%]
+          STR       R1,[R12,#WS_ConfigureSpeed]
 
 .set_linear
           LDR       R0,[R2,#12]
           TEQ       R0,#0
           BEQ       set_square
 
-          LDR       R0,[R12,#flags%]
+          LDR       R0,[R12,#WS_Flags]
           BIC       R0,R0,#&100
-          STR       R0,[R12,#flags%]
+          STR       R0,[R12,#WS_Flags]
 
 .set_square
           LDR       R0,[R2,#16]
           TEQ       R0,#0
           BEQ       set_end
 
-          LDR       R0,[R12,#flags%]
+          LDR       R0,[R12,#WS_Flags]
           ORR       R0,R0,#&100
-          STR       R0,[R12,#flags%]
+          STR       R0,[R12,#WS_Flags]
 
 .set_end
           ADD       R13,R13,#64
@@ -240,28 +274,28 @@ EXT 1
           SWI       "XOS_WriteS"
           EQUZ      "Mouse button: "
           ALIGN
-          LDR       R0,[R12,#configure_button%]
+          LDR       R0,[R12,#WS_ConfigureButton]
           BL        print_val_in_r0
           SWI       "XOS_NewLine"
 
           SWI       "XOS_WriteS"
           EQUZ      "Modifier key: "
           ALIGN
-          LDR       R0,[R12,#configure_key%]
+          LDR       R0,[R12,#WS_ConfigureKey]
           BL        print_val_in_r0
           SWI       "XOS_NewLine"
 
           SWI       "XOS_WriteS"
           EQUZ      "Scroll speed: "
           ALIGN
-          LDR       R0,[R12,#configure_speed%]
+          LDR       R0,[R12,#WS_ConfigureSpeed]
           BL        print_val_in_r0
           SWI       "XOS_NewLine"
 
           SWI       "XOS_WriteS"
           EQUZ      "Speed control mode: "
           ALIGN
-          LDR       R0,[R12,#flags%]
+          LDR       R0,[R12,#WS_Flags]
           TST       R0,#&100
           ADREQ     R0,show_control_lin
           ADRNE     R0,show_control_sqr
@@ -308,18 +342,18 @@ EXT 1
 ; Initialise the workspace that was just claimed.
 
           MOV       R0,#0
-          STR       R0,[R12,#task_handle%]        ; Zero the task handle.
-          STR       R0,[R12,#flags%]              ; Zero the flag-word.
-          STR       R0,[R12,#sprite_area%]        ; Zero the sprite area pointer (only set if claimed from RMA).
+          STR       R0,[R12,#WS_TaskHandle]        ; Zero the task handle.
+          STR       R0,[R12,#WS_Flags]              ; Zero the flag-word.
+          STR       R0,[R12,#WS_SpriteArea]        ; Zero the sprite area pointer (only set if claimed from RMA).
 
           MOV       R0,#2
-          STR       R0,[R12,#configure_speed%]
+          STR       R0,[R12,#WS_ConfigureSpeed]
 
           MOV       R0,#2
-          STR       R0,[R12,#configure_button%]
+          STR       R0,[R12,#WS_ConfigureButton]
 
           MOV       R0,#1
-          STR       R0,[R12,#configure_key%]
+          STR       R0,[R12,#WS_ConfigureKey]
 
 
 ; Flag word; bit 0 - request to start scrolling
@@ -383,18 +417,18 @@ EXT 1
 
 ; Kill the wimp task if it's running.
 
-          LDR       R0,[R12,#task_handle%]
+          LDR       R0,[R12,#WS_TaskHandle]
           CMP       R0,#0
           BLE       final_free_ws
 
           LDR       R1,task
           SWI       "XWimp_CloseDown"
           MOV       R1,#0
-          STR       R1,[R12,#task_handle%]
+          STR       R1,[R12,#WS_TaskHandle]
 
 ; Free the sprite area if necessary
 
-          LDR       R2,[R12,#sprite_area%]
+          LDR       R2,[R12,#WS_SpriteArea]
           TEQ       R2,#0
           BEQ       final_free_ws
           MOV       R0,#7
@@ -428,26 +462,26 @@ EXT 1
           BNE       service_start_wimp
 
           MOV       R14,#0
-          STR       R14,[R12,#task_handle%]
+          STR       R14,[R12,#WS_TaskHandle]
           LDMFD     R13!,{PC}
 
 .service_start_wimp
           TEQ       R1,#46
           BNE       service_started_wimp
 
-          LDR       R14,[R12,#task_handle%]
+          LDR       R14,[R12,#WS_TaskHandle]
           TEQ       R14,#0
           MOVEQ     R14,#NOT-1
-          STREQ     R14,[R12,#task_handle%]
+          STREQ     R14,[R12,#WS_TaskHandle]
           ADREQ     R0,command_desktop
           MOVEQ     R1,#0
           LDMFD     R13!,{PC}
 
 .service_started_wimp
-          LDR       R14,[R12,#task_handle%]
+          LDR       R14,[R12,#WS_TaskHandle]
           CMN       R14,#1
           MOVEQ     R14,#0
-          STREQ     R14,[R12,#task_handle%]
+          STREQ     R14,[R12,#WS_TaskHandle]
           LDMFD     R13!,{PC}
 
 ; ======================================================================================================================
@@ -467,7 +501,7 @@ EXT 1
 ; Test if the mouse button was Menu; if not, just quit now
 
           LDR       R2,[R1,#8]
-          LDR       R3,[R12,#configure_button%]
+          LDR       R3,[R12,#WS_ConfigureButton]
           TST       R2,R3
           LDMEQFD   R13!,{R2,R3,PC}
 
@@ -475,7 +509,7 @@ EXT 1
 
           STMFD     R13!,{R0,R1}
           MOV       R0,#121
-          LDR       R1,[R12,#configure_key%]
+          LDR       R1,[R12,#WS_ConfigureKey]
           EOR       R1,R1,#&80
           SWI       "XOS_Byte"
           TEQ       R1,#&FF
@@ -484,18 +518,18 @@ EXT 1
 
 ; Set the flag to show that a scroll should start, then set up the various pieces of data and mask out the event.
 
-          LDR       R2,[R12,#flags%]
+          LDR       R2,[R12,#WS_Flags]
           ORR       R2,R2,#&01
-          STR       R2,[R12,#flags%]
+          STR       R2,[R12,#WS_Flags]
 
           LDR       R2,[R1,#12]
-          STR       R2,[R12,#scroll_window%]
+          STR       R2,[R12,#WS_ScrollWindow]
 
           LDR       R2,[R1,#0]
-          STR       R2,[R12,#scroll_x%]
+          STR       R2,[R12,#WS_ScrollX]
 
           LDR       R2,[R1,#4]
-          STR       R2,[R12,#scroll_y%]
+          STR       R2,[R12,#WS_ScrollY]
 
           MOV       R0,#-1
 
@@ -524,11 +558,11 @@ EXT 1
 
 ; Lodge an end-scroll request in the flag word.
 
-          LDR       R0,[R12,#flags%]
+          LDR       R0,[R12,#WS_Flags]
           TST       R0,#&2
           TSTEQ     R0,#&4
           ORRNE     R0,R0,#&8
-          STRNE     R0,[R12,#flags%]
+          STRNE     R0,[R12,#WS_Flags]
           MOVNE     R0,#11
 
           MOV       PC,R14
@@ -613,16 +647,16 @@ EXT 1
 
 ; Kill any previous version of our task which may be running.
 
-          LDR       R0,[R12,#task_handle%]
+          LDR       R0,[R12,#WS_TaskHandle]
           TEQ       R0,#0
           LDRGT     R1,task
           SWIGT     "XWimp_CloseDown"
           MOV       R0,#0
-          STRGT     R0,[R12,#task_handle%]
+          STRGT     R0,[R12,#WS_TaskHandle]
 
 ; Set the Quit flag to zero
 
-          STR       R0,[R12,#quit%]
+          STR       R0,[R12,#WS_Quit]
 
 ; (Re) initialise the module as a Wimp task.
 
@@ -632,18 +666,18 @@ EXT 1
           ADR       R3,wimp_messages
           SWI       "XWimp_Initialise"
           SWIVS     "OS_Exit"
-          STR       R1,[R12,#task_handle%]
+          STR       R1,[R12,#WS_TaskHandle]
 
 ; Create the window.
 
           ADR       R1,window_definition
           STR       R0,[R1,#108]
           SWI       "Wimp_CreateWindow"
-          STR       R0,[R12,#win_handle%]
+          STR       R0,[R12,#WS_WindowHandle]
 
 ; Copy the icon definition into the workspace, filling in the bits we know.
 
-          ADRW      R1,icon_def%
+          ADRW      R1,WS_IconDef
           STR       R0,[R1,#0]                    ; Store the window handle
 
           ADR       R2,icon_definition            ; Copy the data from the icon def block into a writable area
@@ -658,13 +692,13 @@ EXT 1
           LDR       R0,[R2,#16]
           STR       R0,[R1,#20]
 
-          ADRW      R0,sprite_name%               ; Point the sprite name to the workspace.
+          ADRW      R0,WS_SpriteName               ; Point the sprite name to the workspace.
           STR       R0,[R1,#24]
 
 ; Load a sprite file or choose a suitable default internal area.
 
           ADR       R0,sprite_variable            ; First, identify if the system variable <WinScroll$Sprites> is set.
-          ADRW      R1,block%                     ; If not, we must use the default sprite areas from inside the module.
+          ADRW      R1,WS_Block                     ; If not, we must use the default sprite areas from inside the module.
           MOV       R2,#255
           MOV       R3,#0
           MOV       R4,#0
@@ -705,7 +739,7 @@ EXT 1
           ADD       R3,R4,#4                      ; internal sprites; otherwise store the pointer so we know to
           SWI       "XOS_Module"                  ; free the memory afterwards.
           BVS       init_sprites_internal
-          STR       R2,[R12,#sprite_area%]
+          STR       R2,[R12,#WS_SpriteArea]
 
           STR       R3,[R2]                       ; Initialise the area.
           MOV       R3,#16
@@ -733,7 +767,7 @@ EXT 1
           ADRNEL    R0,sprite_area_lo
 
 .init_sprites_name_buffer
-          ADRW      R1,icon_def%                  ; Store the sprite area pointer, from the last block of code,
+          ADRW      R1,WS_IconDef                  ; Store the sprite area pointer, from the last block of code,
           STR       R0,[R1,#28]                   ; into the icon definition.
 
           MOV       R0,#12                        ; Set the length of the sprite name buffer.
@@ -743,7 +777,7 @@ EXT 1
 
 ; Set R1 up to be the block pointer.
 
-          ADRW      R1,block%
+          ADRW      R1,WS_Block
 
 ; ----------------------------------------------------------------------------------------------------------------------
 
@@ -757,7 +791,7 @@ EXT 1
           TEQ       R0,#0
           BNE       poll_event_open_window
 
-          LDR       R2,[R12,#flags%]
+          LDR       R2,[R12,#WS_Flags]
 
 .null_start_scroll
           TST       R2,#&01
@@ -798,9 +832,9 @@ EXT 1
           TEQ       R0,#6
           BNE       poll_event_wimp_message
 
-          LDR       R0,[R12,#flags%]
+          LDR       R0,[R12,#WS_Flags]
           ORR       R0,R0,#&8
-          STR       R0,[R12,#flags%]
+          STR       R0,[R12,#WS_Flags]
 ;          BL        end_scroll
           B         poll_loop_end
 
@@ -814,24 +848,24 @@ EXT 1
 .message_quit
           TEQ       R0,#0
           MOVEQ     R0,#1
-          STREQ     R0,[R12,#quit%]
+          STREQ     R0,[R12,#WS_Quit]
 
 .poll_loop_end
-          LDR       R0,[R12,#quit%]
+          LDR       R0,[R12,#WS_Quit]
           TEQ       R0,#0
           BEQ       poll_loop
 
 ; ----------------------------------------------------------------------------------------------------------------------
 
 .close_down
-          LDR       R0,[R12,#task_handle%]
+          LDR       R0,[R12,#WS_TaskHandle]
           LDR       R1,task
           SWI       "XWimp_CloseDown"
 
 ; Set the task handle to zero and die.
 
           MOV       R0,#0
-          STR       R0,[R12,#task_handle%]
+          STR       R0,[R12,#WS_TaskHandle]
 
           SWI       "OS_Exit"
 
@@ -860,20 +894,20 @@ EXT 1
 
 ; Clear the start-flag.
 
-          LDR       R2,[R12,#flags%]
+          LDR       R2,[R12,#WS_Flags]
           BIC       R2,R2,#&01
-          STR       R2,[R12,#flags%]
+          STR       R2,[R12,#WS_Flags]
 
 ; Check for the presence of the scroll-bars
 
-          LDR       R0,[R12,#scroll_window%]
+          LDR       R0,[R12,#WS_ScrollWindow]
           STR       R0,[R1,#0]
           ORR       R1,R1,#1
           SWI       "Wimp_GetWindowInfo"
           BIC       R1,R1,#1
 
           LDR       R2,[R1,#32]
-          ADRW      R1,icon_def%
+          ADRW      R1,WS_IconDef
 
 .start_scroll_both
           TST       R2,#&10000000
@@ -883,9 +917,9 @@ EXT 1
           ADRL      R0,sprite_both
           BL        copy_sprite_name
 
-          LDR       R2,[R12,#flags%]
+          LDR       R2,[R12,#WS_Flags]
           ORR       R2,R2,#&06
-          STR       R2,[R12,#flags%]
+          STR       R2,[R12,#WS_Flags]
 
           B         start_create
 
@@ -896,9 +930,9 @@ EXT 1
           ADRL      R0,sprite_horizontal
           BL        copy_sprite_name
 
-          LDR       R2,[R12,#flags%]
+          LDR       R2,[R12,#WS_Flags]
           ORR       R2,R2,#&04
-          STR       R2,[R12,#flags%]
+          STR       R2,[R12,#WS_Flags]
 
           B         start_create
 
@@ -909,9 +943,9 @@ EXT 1
           ADRL      R0,sprite_vertical
           BL        copy_sprite_name
 
-          LDR       R2,[R12,#flags%]
+          LDR       R2,[R12,#WS_Flags]
           ORR       R2,R2,#&02
-          STR       R2,[R12,#flags%]
+          STR       R2,[R12,#WS_Flags]
 
           B         start_create
 
@@ -921,20 +955,20 @@ EXT 1
 .start_create
 ; Get the details about the window below the pointer.
 
-          ADRW      R1,block%
+          ADRW      R1,WS_Block
 
-          LDR       R0,[R12,#win_handle%]
+          LDR       R0,[R12,#WS_WindowHandle]
           STR       R0,[R1,#0]
           SWI       "Wimp_GetWindowState"
 
 ; Set the window to be centred on the mouse-click.
 
-          LDR       R2,[R12,#scroll_x%]
+          LDR       R2,[R12,#WS_ScrollX]
           SUB       R3,R2,#50
           STR       R3,[R1,#4]
           ADD       R3,R2,#50
           STR       R3,[R1,#12]
-          LDR       R2,[R12,#scroll_y%]
+          LDR       R2,[R12,#WS_ScrollY]
           SUB       R3,R2,#50
           STR       R3,[R1,#8]
           ADD       R3,R2,#50
@@ -948,7 +982,7 @@ EXT 1
 
           MOV       R0,#36
           ORR       R0,R0,#&100
-          ADRW      R1,icon_def%
+          ADRW      R1,WS_IconDef
           LDR       R1,[R1,#28]
           ADRL      R2,sprite_ptr_scroll
           MOV       R3,#%0100010
@@ -976,7 +1010,7 @@ EXT 1
 
           SWI       "Wimp_GetPointerInfo"
 
-          LDR       R0,[R12,#flags%]
+          LDR       R0,[R12,#WS_Flags]
 
 ; Initialise the scroll values.
 
@@ -988,7 +1022,7 @@ EXT 1
           BEQ       do_scroll_y
 
           LDR       R4,[R1,#0]
-          LDR       R5,[R12,#scroll_x%]
+          LDR       R5,[R12,#WS_ScrollX]
           BL        calculate_offset
           MOV       R2,R3
 
@@ -997,12 +1031,12 @@ EXT 1
           BEQ       do_scroll_add
 
           LDR       R4,[R1,#4]
-          LDR       R5,[R12,#scroll_y%]
+          LDR       R5,[R12,#WS_ScrollY]
           BL        calculate_offset
 
 .do_scroll_add
 
-          LDR       R0,[R12,#scroll_window%]
+          LDR       R0,[R12,#WS_ScrollWindow]
           STR       R0,[R1,#0]
           ORR       R1,R1,#1
           SWI       "XWimp_GetWindowInfo"
@@ -1031,12 +1065,12 @@ EXT 1
 ; Send a Window Open Event to the task.
 
           MOV       R0,#2
-          LDR       R2,[R12,#scroll_window%]
+          LDR       R2,[R12,#WS_ScrollWindow]
           SWI       "Wimp_SendMessage"
 
 ; Re-open the arrow window on top, just to be safe.
 
-          LDR       R0,[R12,#win_handle%]
+          LDR       R0,[R12,#WS_WindowHandle]
           STR       R0,[R1,#0]
           SWI       "Wimp_GetWindowState"
           MOV       R0,#-1
@@ -1089,7 +1123,7 @@ EXT 1
           MOV       R0,R2
 
 .calculate_offset_continue
-          LDR       R1,[R12,#configure_speed%]
+          LDR       R1,[R12,#WS_ConfigureSpeed]
 
           BL        divide
 
@@ -1105,7 +1139,7 @@ EXT 1
 
 ; Close the arrow window.
 
-          LDR       R0,[R12,#win_handle%]
+          LDR       R0,[R12,#WS_WindowHandle]
           STR       R0,[R1,#0]
           SWI       "Wimp_CloseWindow"
 
@@ -1122,9 +1156,9 @@ EXT 1
 
 ; Clear out the scroll and end-scroll flags.
 
-          LDR       R2,[R12,#flags%]
+          LDR       R2,[R12,#WS_Flags]
           BIC       R2,R2,#&0E
-          STR       R2,[R12,#flags%]
+          STR       R2,[R12,#WS_Flags]
 
           LDMFD     R13!,{R0-R7,PC}
 
