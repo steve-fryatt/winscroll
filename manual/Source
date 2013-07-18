@@ -1,242 +1,228 @@
+<document title="Windows Scroll">
+<define name="version" value="0.60">
+<define name="date" value="12 October 2003" length=30 align="right">
+
+
+
+
+
+<literal mode="Text">
 =============================================================================
-Windows Scroll - Scroll around windows using the mouse           Version 0.51
+Windows Scroll - Scroll around windows using the mouse           Version $$version$$
 
-(C) Stephen Fryatt, 2002                                      6 December 2002
+(C) Stephen Fryatt, 2002                       $$date$$
 =============================================================================
+</literal>
 
 
-License
--------
 
-  Windows Scroll is FREEWARE.  Copyright is held by the author, Stephen
-  Fryatt, 2002.
 
-  Windows Scroll may be copied freely, so long as it remains unaltered with
-  all its files and documentation intact.
 
-  If you wish to distribute Windows Scroll, please contact me to get my
-  permission.  This is so that I can ensure that you have the latest version
-  available.  Windows Scroll may not be sold, although Public Domain
-  libraries may charge for the cost of discs.
 
-  No guarantee is made as to the suitability or stability of Windows Scroll
-  for any particular purpose.  No liability can be accepted by the author for
-  any problems or damage caused by the use of Windows Scroll.
 
+<chapter title="License" file="License">
 
+<cite>Windows Scroll</cite> is <strong>Freeware</strong>.  Copyright is held by the author, Stephen Fryatt, 2002.
 
-Introduction
-------------
+<cite>Windows Scroll</cite> may be copied freely, so long as it remains unaltered with all its files and documentation intact.
 
-  Windows Scroll is a small module for RISC OS to provide the kind of
-  scrolling that is available on MS Windows when the wheel button of the
-  mouse is pressed.  It does not, however, need a wheel mouse to work.
+If you wish to distribute <cite>Windows Scroll</cite>, please contact me to get my permission. This is so that I can ensure that you have the latest version available. <cite>Windows Scroll</cite> may not be sold, although Public Domain libraries may charge for the cost of discs.
 
-  There are still things to be done to Windows Scroll: see Known issues for
-  details.
+No guarantee is made as to the suitability or stability of <cite>Windows Scroll</cite> for any particular purpose.  No liability can be accepted by the author for any problems or damage caused by the use of <cite>Windows Scroll</cite>.
 
+</chapter>
 
 
-Installation and use
---------------------
 
-  To install Windows Scroll, copy the WinScroll module on to your hard disc
-  and then double-click on it to run it.  If you want to use Windows Scroll
-  permanently, add it to your machine's boot sequence.
 
-  The RunWS Obey file included in the archive can be used if you wish to
-  change the WinScroll configuration (speed, key-presses or sprites) by
-  default.  It should be in the same directory as the WinScroll module; you
-  may wish to create a specific directory and then place non-standard sprite
-  files here as well.
+<chapter title="Introduction" file="Introduction">
 
-  Once installed, clicking Ctrl-Menu over a window with scroll-bars will open
-  a small arrow window under the mouse pointer.  This contains a 'centre
-  point' and a set of arrows indicating which scroll directions are possible
-  (this depends on which scroll bars are present on the original window).
-  Moving the mouse away from the point in the direction of one of the arrows
-  will cause the window to scroll in that direction; the further the mouse is
-  moved, the faster the scroll.
+<cite>Windows Scroll</cite> is a small module for RISC OS to provide the kind of scrolling that is available on <cite>MS Windows</cite> when the wheel button of the mouse is pressed.  It does not, however, need a wheel mouse to work.
 
-  To stop the scrolling, click the mouse (doing this over the arrow window
-  will prevent the mouse click being registered anywhere else).
+There are still things to be done to <cite>Windows Scroll</cite>: see <link ref="Issues">Known issues</link> for details.
 
+</chapter>
 
 
-Configuration and options
--------------------------
 
-  Various configuration options are available for Windows Scroll.
 
-  Most configuration of Windows Scroll is done via the command line, using
-  the "*WinScrollConfigure" command.  This takes a number of parameters, that
-  allow the various options to be set.  It is not necessary to supply all of
-  the parameters each time.  If the command is used with no parameters, the
-  current settings are displayed.
+<chapter title="Installation and use" file="Using">
 
-  *WinScrollConfigure [options]
+To install <cite>Windows Scroll</cite>, copy the <file>WinScroll</file> module on to your hard disc and then double-click on it to run it.  If you want to use <cite>Windows Scroll</cite> permanently, add it to your machine's boot sequence.
 
-    The "WinScrollConfigure" is used to configure the WinScroll module.  It
-    takes a number of parameters, depending upon which aspects of operation
-    are to be configured.
+The <file>RunWS</file> Obey file included in the archive can be used if you wish to change the <cite>WinScroll</cite> configuration (speed, key-presses or sprites) by default.  It should be in the same directory as the <file>WinScroll</file> module; you may wish to create a specific directory and then place non-standard sprite files here as well.
 
-    The options available are as follows:
+Once installed, clicking <key>ctrl</key>-<mouse>menu</mouse> over a window with scroll-bars will open a small <window>arrow window</window> under the mouse pointer.  This contains a 'centre point' and a set of arrows indicating which scroll directions are possible (this depends on which scroll bars are present on the original window).  Moving the mouse away from the point in the direction of one of the arrows will cause the window to scroll in that direction; the further the mouse is moved, the faster the scroll.
 
-    -Button <button>
+To stop the scrolling, click the mouse (doing this over the <window>arrow window</window> will prevent the mouse click being registered anywhere else).
 
-      The "-button <number>" option sets the mouse button used to invoke the
-      scrolling (when pressed along with the modifier key).  The value passed
-      is one of:
+</chapter>
 
-      * 4 - Select
-      * 2 - Menu
-      * 1 - Adjust
 
-      For example: "-Button 2" would set the Menu button.
 
-      The default button is Menu.  Using other buttons is not recommended,
-      since it may not always be possible for Windows Scroll to see them.
 
-    -Modifier
+<chapter title="Configuration and options" file="Config">
 
-      The "-modifier <key number>" option sets the key that must be pressed
-      with the chosen mouse button to start a scroll.  The value passed is an
-      'Internal key number', a list of which can be found in the PRMs or
-      StrongHelp Manuals; the most useful codes are:
+Various configuration options are available for <cite>Windows Scroll</cite>.
 
-      * 0 - Shift (either, but 3 - left, 6 - right)
-      * 1 - Ctrl (either, but 4 - left, 7 - right)
-      * 2 - Alt (either, but 5 - left, 8 - right)
-      * 9 - Select
-      * 10 - Menu
-      * 11 - Adjust
+Most configuration of <cite>Windows Scroll</cite> is done via the command line, using the <command>*WinScrollConfigure</command> command.  This takes a number of parameters, that allow the various options to be set.  It is not necessary to supply all of the parameters each time.  If the command is used with no parameters, the current settings are displayed.
 
-      For example: "-Modifier 4" would set the left Ctrl key as the modifier.
 
-      The default key is Ctrl.  Since the key-presses are not masked out from
-      other tasks, be careful which keys you use.  Mouse buttons are
-      possible, with the problems that the clicks will still be registered
-      and that PS/2 mice do not register more than one button at a time.
+<comdef target="*WinScrollConfigure" params="[options]">
 
-    -Speed
+The <command>WinScrollConfigure</command> command is used to configure the WinScroll module.  It takes a number of parameters, depending upon which aspects of operation are to be configured.
 
-      The "-speed <speed>" option sets the speed of the scrolling and is used
-      in conjunction with the "-square" and "-linear" options.  The <speed>
-      parameter is used as a divider: the lower the value, the faster the
-      scrolling for a given mouse movement.
+The options available are as follows:
 
-      For example: "-Speed 4" would set the set the speed to half the
-      default.
+<definition target="-Button &lt;button&gt;">
+The <command>-button &lt;number&gt;</command> option sets the mouse button used to invoke the scrolling (when pressed along with the modifier key).  The value passed is one of:
 
-      The default speed is 2 (linear).
+<list>
+<li>4 - <mouse>select</mouse>
+<li>2 - <mouse>menu</mouse>
+<li>1 - <mouse>adjust</mouse>
+</list>
 
-    -square and -linear
+For example: <code>-Button 2</code> would set the <mouse>menu</mouse> button.
 
-      The "-square" and "-linear" options set whether the speed increase is
-      linear compared to the distance between the centre point and the mouse
-      or if it goes up according to the square of the distance.  When using
-      square control, the speed parameter should be set higher, say 40 to 50.
+The default button is <mouse>menu</mouse>.  Using other buttons is not recommended, since it may not always be possible for <cite>Windows Scroll</cite> to see them.
+</definition>
 
-      The default is for linear control.
+<definition target="-Modifier">
+The <command>-modifier &lt;key number&gt;</command> option sets the key that must be pressed with the chosen mouse button to start a scroll.  The value passed is an 'Internal key number', a list of which can be found in the PRMs or StrongHelp Manuals; the most useful codes are:
 
-    An example command might be
+<list>
+<li>0 - <key>shift</key> (either, but 3 - left, 6 - right)
+<li>1 - <key>ctrl</key> (either, but 4 - left, 7 - right)
+<li>2 - <key>alt</key> (either, but 5 - left, 8 - right)
+<li>9 - <mouse>select</mouse>
+<li>10 - <mouse>menu</mouse>
+<li>11 - <mouse>adjust</mouse>
+</list>
 
-      *WinScrollConfigure -Speed 40 -Square
+For example: <code>-Modifier 4</code> would set the left <key>ctrl</key> key as the modifier.
 
-    to set 'square-response' scrolling at a sensible speed factor, or
+The default key is <key>ctrl</key>.  Since the key-presses are not masked out from other tasks, be careful which keys you use.  Mouse buttons are possible, with the problems that the clicks will still be registered and that PS/2 mice do not register more than one button at a time.
+</definition>
 
-      *WinScrollConfigure -Modifier 9
+<definition target="-Speed">
+The <command>-speed &lt;speed&gt;</command> option sets the speed of the scrolling and is used in conjunction with the <command>-square</command> and <command>-linear</command> options.  The &lt;speed&gt; parameter is used as a divider: the lower the value, the faster the scrolling for a given mouse movement.
 
-    to set the modifier key to be Select.
+For example: <code>-Speed 4</code> would set the set the speed to half the default.
 
+The default speed is 2 (linear).
+</definition>
 
-  Sprite files
-  ------------
+<definition target="-square and -linear">
+The <command>-square</command> and <command>-linear</command> options set whether the speed increase is linear compared to the distance between the centre point and the mouse or if it goes up according to the square of the distance.  When using square control, the speed parameter should be set higher, say 40 to 50.
 
-  It is possible to change the sprites that are used by Windows Scroll.  On
-  loading, the system variable <WinScroll$Sprites> is checked.  If this is
-  set and pointing to a valid sprite file, the appropriate file (based on the
-  usual Wimp suffixes) is used in preference to the default sprites stored in
-  the module.
+The default is for linear control.
+</definition>
 
-  See the sprite files in the Source directory for details about what sprites
-  are required.  When creating a new file, make sure that all the sprites
-  keep the same dimensions and colour depth.
+An example command might be
 
+<codeblock>
+*WinScrollConfigure -Speed 40 -Square
+</codeblock>
 
+to set 'square-response' scrolling at a sensible speed factor, or
 
-Known issues
-------------
+<codeblock>
+*WinScrollConfigure -Modifier 9
+</codeblock>
 
-  Windows Scroll is currently in a very early stage of development and there
-  are a number of known problems.  If anyone find the application useful, I
-  will deal with these.
+to set the modifier key to be <mouse>Select</mouse>.
 
-  In addition, the interface (in particular the invocation keys) are up for
-  alternative suggestions.  I would also appreciate bug reports or
-  suggestions for improvements.  My email address is at the end of this file.
+</comdef>
 
-  The issues I am aware of at present are:
+<subhead title="Sprite files">
 
-  * Scroll area bounds are not checked before Open Window requests are sent
-    to applications.  This is not an issue on RISC OS 4, but I have not
-    tested it on earlier versions.  It is easily fixable.
-  * The way in which menus from Toolbox applications are dealt with is still
-    not ideal (simply calling "Wimp_CreateMenu,-1" to close them when the
-    open).
-  * Changes to the mouse pointer can be overridden by other applications as
-    the mouse passes over their windows.
-  * Terminating mouse-clicks affect the window under the pointer; this can be
-    worked around by clicking on the arrow window as in previous versions.
-  * Composite windows, where the scroll bars are on a separate window to the
-    one containing the document, will not work as Windows Scroll can not see
-    the scroll bars and so will not agree to scroll the window.  Impression
-    and Personal Accounts are two 'offenders' that I know of.
+It is possible to change the sprites that are used by <cite>Windows Scroll</cite>.  On loading, the system variable &lt;WinScroll$Sprites&gt; is checked.  If this is set and pointing to a valid sprite file, the appropriate file (based on the usual Wimp suffixes) is used in preference to the default sprites stored in the module.
 
+See the sprite files in the <file>Source</file> directory for details about what sprites are required.  When creating a new file, make sure that all the sprites keep the same dimensions and colour depth.
 
+</chapter>
 
-Version history
----------------
 
-  The following is a list of all the versions of Windows Scroll.
 
+<chapter title="Known issues" file="Issues">
 
-  0.10 (28 September 2002)
-  ------------------------
+<cite>Windows Scroll</cite> is still in development, and there are a number of known problems.  If anyone find the application useful, I will deal with these.
 
-  * First publicly released version.
+In addition, the interface (in particular the invocation keys) are up for alternative suggestions.  I would also appreciate bug reports or suggestions for improvements.  My email address is at the end of this file.
 
+The issues I am aware of at present are:
 
-  0.20 (30 September 2002)
-  ------------------------
+<list>
+<li>Scroll area bounds are not checked before Open Window requests are sent to applications.  This is not an issue on RISC OS 4, but I have not tested it on earlier versions.  It is easily fixable.
 
-  This version was not released.
+<li>The way in which menus from Toolbox applications are dealt with is still not ideal (simply calling <code>Wimp_CreateMenu,-1</code> to close them when the open).
 
-  * Added error trapping so that WinScroll task does not crash if the window
-    being scrolled disappears for whatever reason.
+<li>Changes to the mouse pointer can be overridden by other applications as the mouse passes over their windows.
 
+<li>Composite windows, where the scroll bars are on a separate window to the one containing the document, will not work as <cite>Windows Scroll</cite> can not see the scroll bars and so will not agree to scroll the window.  <cite>Impression</cite> and <cite>Personal Accounts</cite> are two 'offenders' that I know of.
+</list>
 
-  0.30 (7 October 2002)
-  ---------------------
+</chapter>
 
-  * Added low and hi-res sprites and changed design to be all-black arrows.
-  * The <WinScroll$Sprites> system variable is added, to allow for
-    user-defined sprites at run-time.
-  * 'Linear' and 'Square' speed controls added.
-  * *WinScrollConfigure added, with support for -Key, -Modifier, -Speed and
-    -Linear/-Square.
-  * Any mouse-click now terminates the scroll function.
-  * Menus opened by the ToolBox are now closed.
-  * Mouse pointer changes during drags.
 
 
-  0.51 (6 December 2002)
-  ----------------------
 
-  Public Beta release.
+<chapter title="Version history" file="History">
 
-  * Module converted to new format and checked for 32-bit compatibility.
+The following is a list of all the versions of <cite>Windows Scroll</cite>.
 
+<subhead title="0.10 (28 September 2002)">
+
+<list>
+<li>First publicly released version.
+</list>
+
+
+<subhead title="0.20 (30 September 2002)">
+
+This version was not released.
+
+<list>
+<li>Added error trapping so that WinScroll task does not crash if the window being scrolled disappears for whatever reason.
+</list>
+
+
+<subhead title="0.30 (7 October 2002)">
+
+<list>
+<li>Added low and hi-res sprites and changed design to be all-black arrows.
+<li>The &lt;WinScroll$Sprites&gt; system variable is added, to allow for user-defined sprites at run-time.
+<li>'Linear' and 'Square' speed controls added.
+<li>*WinScrollConfigure added, with support for -Key, -Modifier, -Speed and -Linear/-Square.
+<li>Any mouse-click now terminates the scroll function.
+<li>Menus opened by the ToolBox are now closed.
+<li>Mouse pointer changes during drags.
+</list>
+
+
+<subhead title="0.51 (6 December 2002)">
+
+Public Beta release.
+
+<list>
+<li>Module converted to new format and checked for 32-bit compatibility.
+</list>
+
+
+<subhead title="0.60 (12 October 2003)">
+
+<list>
+<li>Corrected window stack flags to work correctly on Select.
+<li>Filters out mouse clicks while the scroll is active, to prevent the terminating click affecting the window below.
+</list>
+
+</chapter>
+
+
+
+
+<literal mode="Text">
 
 
 Updates and Contacting Me
@@ -250,3 +236,4 @@ Updates and Contacting Me
 
   Stephen Fryatt
   email: steve@stevefryatt.org.uk
+</literal>
