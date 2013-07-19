@@ -24,7 +24,7 @@
 ;
 ; WinScroll Module Source
 ;
-;  bit neutral
+; 32 bit neutral
 
 ;version$="0.51"
 ;save_as$="^.WinScroll"
@@ -804,7 +804,7 @@ EXT 1
           TST       R2,#&08
           BEQ       null_do_scroll
 
-          BL        end_scroll
+          BL        EndScroll
           B         poll_loop_end
 
 .null_do_scroll
@@ -835,7 +835,7 @@ EXT 1
           LDR       R0,[R12,#WS_Flags]
           ORR       R0,R0,#&8
           STR       R0,[R12,#WS_Flags]
-;          BL        end_scroll
+;          BL        EndScroll
           B         poll_loop_end
 
 .poll_event_wimp_message
@@ -915,7 +915,7 @@ EXT 1
           BEQ       start_scroll_horiz
 
           ADRL      R0,sprite_both
-          BL        copy_sprite_name
+          BL        CopySpriteName
 
           LDR       R2,[R12,#WS_Flags]
           ORR       R2,R2,#&06
@@ -928,7 +928,7 @@ EXT 1
           BEQ       start_scroll_vert
 
           ADRL      R0,sprite_horizontal
-          BL        copy_sprite_name
+          BL        CopySpriteName
 
           LDR       R2,[R12,#WS_Flags]
           ORR       R2,R2,#&04
@@ -941,7 +941,7 @@ EXT 1
           BEQ       start_scroll_none
 
           ADRL      R0,sprite_vertical
-          BL        copy_sprite_name
+          BL        CopySpriteName
 
           LDR       R2,[R12,#WS_Flags]
           ORR       R2,R2,#&02
@@ -1023,7 +1023,7 @@ EXT 1
 
           LDR       R4,[R1,#0]
           LDR       R5,[R12,#WS_ScrollX]
-          BL        calculate_offset
+          BL        CalculateOffset
           MOV       R2,R3
 
 .do_scroll_y
@@ -1032,7 +1032,7 @@ EXT 1
 
           LDR       R4,[R1,#4]
           LDR       R5,[R12,#WS_ScrollY]
-          BL        calculate_offset
+          BL        CalculateOffset
 
 .do_scroll_add
 
@@ -1045,7 +1045,7 @@ EXT 1
 
 ; An error occurred, so end the scroll right now.
 
-          BL        end_scroll
+          BL        EndScroll
           B         exit_do_scroll
 
 .do_scroll_window_ok
@@ -1091,76 +1091,75 @@ EXT 1
 
 ; <= R3 = Scroll offset
 
-.calculate_offset
-          STMFD     R13!,{R0-R2,R6,R14}
+CalculateOffset
+	STMFD	R13!,{R0-R2,R6,R14}
 
-          SUB       R2,R4,R5
+	SUB	R2,R4,R5
 
-          TST       R0,#&100
-          BEQ       calculate_linear_offset
+	TST	R0,#&100
+	BEQ	CalculateLinearOffset
 
-.calculate_square_offset
-          AND       R4,R2,#&80000000
-          TEQ       R4,#&80000000
-          BNE       calculate_do_square
+CalculateSquareOffset
+	AND	R4,R2,#&80000000
+	TEQ	R4,#&80000000
+	BNE	CalculateDoSquare
 
-          MOV       R5,#-1
-          EOR       R2,R2,R5
-          ADD       R2,R2,#1
+	MOV	R5,#-1
+	EOR	R2,R2,R5
+	ADD	R2,R2,#1
 
-.calculate_do_square
-          MUL       R0,R2,R2
+CalculateDoSquare
+	MUL	R0,R2,R2
 
-          TEQ       R4,#&80000000
-          BNE       calculate_offset_continue
+	TEQ	R4,#&80000000
+	BNE	CalculateOffsetContinue
 
-          SUB       R0,R0,#1
-          EOR       R0,R0,R5
+	SUB	R0,R0,#1
+	EOR	R0,R0,R5
 
-          B         calculate_offset_continue
+	B	CalculateOffsetContinue
 
-.calculate_linear_offset
-          MOV       R0,R2
+CalculateLinearOffset
+	MOV	R0,R2
 
-.calculate_offset_continue
-          LDR       R1,[R12,#WS_ConfigureSpeed]
+CalculateOffsetContinue
+	LDR	R1,[R12,#WS_ConfigureSpeed]
 
-          BL        divide
+	BL	Divide
 
-          LDMFD     R13!,{R0-R2,R6,PC}
+	LDMFD	R13!,{R0-R2,R6,PC}
 
 ; ----------------------------------------------------------------------------------------------------------------------
 
-
 ; End a scroll operation.
 
-.end_scroll
-          STMFD     R13!,{R0-R7,R14}
+EndScroll
+	STMFD	R13!,{R0-R7,R14}
 
 ; Close the arrow window.
 
-          LDR       R0,[R12,#WS_WindowHandle]
-          STR       R0,[R1,#0]
-          SWI       "Wimp_CloseWindow"
+	LDR	R0,[R12,#WS_WindowHandle]
+	STR	R0,[R1,#0]
+	SWI	"Wimp_CloseWindow"
 
 ; Reset the mouse pointer.
 
-          MOV       R0,#36
-          ADRL      R2,sprite_ptr_default
-          MOV       R3,#%0100001
-          MOV       R4,#0
-          MOV       R5,#0
-          MOV       R6,#0
-          MOV       R7,#0 ; No pixel translation table
-          SWI       "Wimp_SpriteOp"
+	MOV	R0,#36
+	ADRL	R2,sprite_ptr_default
+	MOV	R3,#%0100001
+	MOV	R4,#0
+	MOV	R5,#0
+	MOV	R6,#0
+	MOV	R7,#0					; No pixel translation table
+	SWI	"Wimp_SpriteOp"
 
 ; Clear out the scroll and end-scroll flags.
 
-          LDR       R2,[R12,#WS_Flags]
-          BIC       R2,R2,#&0E
-          STR       R2,[R12,#WS_Flags]
+	LDR	R2,[R12,#WS_Flags]
+	BIC	R2,R2,#&0E
+	STR	R2,[R12,#WS_Flags]
 
-          LDMFD     R13!,{R0-R7,PC}
+	LDMFD	R13!,{R0-R7,PC}
 
 ; ======================================================================================================================
 
@@ -1169,19 +1168,19 @@ EXT 1
 ; => R0 -> Sprite name
 ;    R1 -> Icon block
 
-.copy_sprite_name
-          STMFD     R13!,{R0,R2-R3,R14}
+CopySpriteName
+	STMFD	R13!,{R0,R2-R3,R14}
 
-          LDR       R2,[R1,#24]
+	LDR	R2,[R1,#24]
 
-.copy_sprite_loop
-          LDRB      R3,[R0],#1
-          STRB      R3,[R2],#1
+CopySpriteLoop
+	LDRB	R3,[R0],#1
+	STRB	R3,[R2],#1
 
-          TEQ       R3,#0
-          BNE       copy_sprite_loop
+	TEQ	R3,#0
+	BNE	CopySpriteLoop
 
-          LDMFD     R13!,{R0,R2-R3,PC}
+	LDMFD	R13!,{R0,R2-R3,PC}
 
 ; ======================================================================================================================
 
@@ -1193,44 +1192,44 @@ EXT 1
 ; <= R3 = Quotient
 ;   (R1 = Remainder)
 
-.divide
-          STMFD     R13!,{R0-R2,R4-R5,R14}
+Divide
+	STMFD	R13!,{R0-R2,R4-R5,R14}
 
-          MOV       R3,#1
+	MOV	R3,#1
 
-          AND       R4,R0,#&80000000    ; Get the sign bit and if negative, invert the number.
-          TEQ       R4,#&80000000
-          BNE       div1
+	AND	R4,R0,#&80000000			; Get the sign bit and if negative, invert the number.
+	TEQ	R4,#&80000000
+	BNE	Div1
 
-          MOV       R5,#-1
-          EOR       R0,R0,R5
-          ADD       R0,R0,#1
+	MOV	R5,#-1
+	EOR	R0,R0,R5
+	ADD	R0,R0,#1
 
-.div1
-          CMP       R0,R1,ASL #1
-          MOVGE     R1,R1,ASL #1
-          MOVGE     R3,R3,ASL #1
-          BGE       div1
-          MOV       R2,#0
+Div1
+	CMP	R0,R1,ASL #1
+	MOVGE	R1,R1,ASL #1
+	MOVGE	R3,R3,ASL #1
+	BGE	Div1
+	MOV	R2,#0
 
-.div2
-          CMP       R0,R1
-          SUBGE     R0,R0,R1
-          ADDGE     R2,R2,R3
-          MOV       R1,R1,ASR #1
-          MOVS      R3,R3,ASR #1
-          BNE       div2
+Div2
+	CMP	R0,R1
+	SUBGE	R0,R0,R1
+	ADDGE	R2,R2,R3
+	MOV	R1,R1,ASR #1
+	MOVS	R3,R3,ASR #1
+	BNE	Div2
 
-          TEQ       R4,#&80000000       ; Make the result negative if required.
-          BNE       div_exit
+	TEQ	R4,#&80000000				; Make the result negative if required.
+	BNE	DivExit
 
-          SUB       R2,R2,#1
-          EOR       R2,R2,R5
-.div_exit
-;         MOV       R1,R0
-          MOV       R3,R2
+	SUB	R2,R2,#1
+	EOR	R2,R2,R5
+.DivExit
+;	MOV	R1,R0
+	MOV	R3,R2
 
-          LDMFD     R13!,{R0-R2,R4-R5,PC}
+	LDMFD	R13!,{R0-R2,R4-R5,PC}
 
 ; ======================================================================================================================
 
