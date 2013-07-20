@@ -26,9 +26,6 @@
 ;
 ; 32 bit neutral
 
-;version$="0.51"
-;save_as$="^.WinScroll"
-
 XOS_Byte				EQU	&020006
 XOS_CallEvery				EQU	&02003C
 XOS_Claim				EQU	&02001F
@@ -148,7 +145,7 @@ TitleString
 	ALIGN
 
 HelpString
-	DCB	"Windows Scroll",9,$BuildVersion," (",$BuildDate,") ",169," Stephen Fryatt, 2002",0	;-",$BuildDate:RIGHT:4,0
+	DCB	"Windows Scroll",9,$BuildVersion," (",$BuildDate,") ",169," Stephen Fryatt, 2002-",$BuildDate:RIGHT:4,0
 	ALIGN
 
 ; ======================================================================================================================
@@ -590,9 +587,10 @@ PollMask
 
 TaskName
 	DCB	"Windows Scroll",0
+	ALIGN
 
 MisusedStartCommand
-	DCDU	0								; \TODO -- Fix once complete.
+	DCD	0
 	DCB	"Use *Desktop to start WinScroll.",0
 	ALIGN
 
@@ -643,8 +641,8 @@ IconDefinition
 
 TaskCode
 	LDR	R12,[R12]
-	ADD	R13,R12,#WS_Size	;+4		; Set the stack up.	; \TODO -- Fix once complete.
-	ADD	R13,R13,#4							; \TODO -- Fix once complete.
+	ADD	R13,R12,#WS_Size
+	ADD	R13,R13,#4
 
 ; Check that we aren't in the desktop.
 
