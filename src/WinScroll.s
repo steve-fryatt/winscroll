@@ -58,11 +58,7 @@ XWimp_ReadSysInfo			EQU	&0600F2
 OS_Exit					EQU	&000011
 OS_GenerateError			EQU	&00002B
 
-OS_Byte					EQU	&000006
-OS_Claim				EQU	&00001F
-OS_ReadArgs				EQU	&000049
 OS_ReadMonotonicTime			EQU	&000042
-OS_Release				EQU	&000020
 OS_SpriteOp				EQU	&00002E
 Wimp_CloseWindow			EQU	&0400C6
 Wimp_CreateIcon				EQU	&0400C2
@@ -235,7 +231,8 @@ ConfigureSet
 	ADR	R0,ConfigureString
 	MOV	R2,R13
 	MOV	R3,#64
-	SWI	OS_ReadArgs
+	SWI	XOS_ReadArgs
+	BVS	ConfigureSetExit
 
 ConfigureSetButton
 	LDR	R0,[R2,#0]
@@ -302,22 +299,25 @@ ConfigureShow
 	DCB	"Mouse button: ",0
 	ALIGN
 	LDR	R0,[R12,#WS_ConfigureButton]
-	BL	PrintValueInR0
-	SWI	XOS_NewLine
+	BLVC	PrintValueInR0
+	SWIVC	XOS_NewLine
+	BVS	ConfigureShowExit
 
 	SWI	XOS_WriteS
 	DCB	"Modifier key: ",0
 	ALIGN
 	LDR	R0,[R12,#WS_ConfigureKey]
-	BL	PrintValueInR0
-	SWI	XOS_NewLine
+	BLVC	PrintValueInR0
+	SWIVC	XOS_NewLine
+	BVS	ConfigureShowExit
 
 	SWI	XOS_WriteS
 	DCB	"Scroll speed: ",0
 	ALIGN
 	LDR	R0,[R12,#WS_ConfigureSpeed]
-	BL	PrintValueInR0
-	SWI	XOS_NewLine
+	BLVC	PrintValueInR0
+	SWIVC	XOS_NewLine
+	BVS	ConfigureShowExit
 
 	SWI	XOS_WriteS
 	DCB	"Speed control mode: ",0
@@ -326,9 +326,10 @@ ConfigureShow
 	TST	R0,#Flag_SquareMode
 	ADREQ	R0,ConfigureControlLinear
 	ADRNE	R0,ConfigureControlSquare
-	SWI	XOS_Write0
-	SWI	XOS_NewLine
+	SWIVC	XOS_Write0
+	SWIVC	XOS_NewLine
 
+ConfigureShowExit
 	LDMFD	R13!,{PC}
 
 ; ----------------------------------------------------------------------------------------------------------------------
@@ -347,7 +348,7 @@ PrintValueInR0
 	MOV	R1,R13
 	MOV	R2,#16					; the size of this to the OS to
 	SWI	XOS_ConvertCardinal4			; make it into a number...
-	SWI	XOS_Write0				; ...ready to print on the screen.
+	SWIVC	XOS_Write0				; ...ready to print on the screen.
 	ADD	R13,R13,#16
 	LDMFD	R13!,{R1-R2,PC}
 
@@ -390,22 +391,24 @@ InitCode
 	MOV	R3,#0
 	LDR	R4,FilterMask
 	SWI	XFilter_RegisterPostFilter
+	BVS	InitExit
 
 ; Claim EventV
 
 	MOV	R0,#&10
 	ADR	R1,EventVCode
 	MOV	R2,R12
-	SWI	OS_Claim
+	SWI	XOS_Claim
+	BVS	InitExit
 
 ; Enable EventV
 
 	MOV	R0,#14
 	MOV	R1,#11
-	SWI	OS_Byte
+	SWI	XOS_Byte
 
 InitExit
-          LDMFD     R13!,{PC}
+	LDMFD     R13!,{PC}
 
 ; ----------------------------------------------------------------------------------------------------------------------
 
@@ -417,18 +420,18 @@ FinalCode
 
 	MOV	R0,#13
 	MOV	R1,#11
-	SWI	OS_Byte
+	SWI	XOS_Byte
 
 ; De-register from EventV
 
 	MOV	R0,#&10
 	ADR	R1,EventVCode
 	MOV	R2,R12
-	SWI	OS_Release
+	SWI	XOS_Release
 
 ; De-register the filter
 
-	ADR	R0,TitleString
+	ADRL	R0,TitleString
 	ADR	R1,FilterCode
 	MOV	R2,R12
 	MOV	R3,#0
@@ -760,7 +763,6 @@ InitSpritesLoadFile
 	MOV	R0,#&0A
 	ORR	R0,R0,#&100
 	SWI	XOS_SpriteOp
-
 	BVS	InitSpritesInternal
 
 	MOV	R0,R1
