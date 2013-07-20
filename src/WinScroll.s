@@ -614,7 +614,7 @@ WindowDefinition
 	DCD	0		; X scroll offset
 	DCD	0 		; Y scroll offset
 	DCD	-1		; Handle to open window behind
-	DCD	&80000810	; Window flags
+	DCD	&80000010	; Window flags
 	DCD	&01070207
 	DCD	&000C0207
 	DCD	0		; Work area min x
