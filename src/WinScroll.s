@@ -348,7 +348,7 @@ InitCode
 ; This space is used for everything; both the module 'back-end' and the WIMP task.
 
 	MOV	R0,#6
-	MOV	R3,#workspace_size%
+	MOV	R3,#WS_Size
 	SWI	XOS_Module
 	BVS	InitExit
 	STR	R2,[R12]
@@ -430,7 +430,7 @@ FinalCode
 	BLE	FinalFreeWS
 
 	LDR	R1,Task
-	SWI	"Wimp_CloseDown
+	SWI	Wimp_CloseDown
 	MOV	R1,#0
 	STR	R1,[R12,#WS_TaskHandle]
 
@@ -592,7 +592,7 @@ TaskName
 	DCB	"Windows Scroll",0
 
 MisusedStartCommand
-	DED	0
+	DCD	0
 	DCB	"Use *Desktop to start WinScroll.",0
 	ALIGN
 
@@ -643,7 +643,7 @@ IconDefinition
 
 TaskCode
 	LDR	R12,[R12]
-	ADRW	R13,workspace_size%+4			; Set the stack up.
+	ADD	R13,R12,#WS_Size+4			; Set the stack up.
 
 ; Check that we aren't in the desktop.
 
@@ -684,7 +684,7 @@ TaskCode
 
 ; Copy the icon definition into the workspace, filling in the bits we know.
 
-	ADRW	R1,WS_IconDef
+	ADD	R1,R12,#WS_IconDef
 	STR	R0,[R1,#0]			; Store the window handle
 
 	ADR	R2,IconDefinition		; Copy the data from the icon def block into a writable area
@@ -699,13 +699,13 @@ TaskCode
 	LDR	R0,[R2,#16]
 	STR	R0,[R1,#20]
 
-	ADRW	R0,WS_SpriteName		; Point the sprite name to the workspace.
+	ADD	R0,R12,#WS_SpriteName		; Point the sprite name to the workspace.
 	STR	R0,[R1,#24]
 
 ; Load a sprite file or choose a suitable default internal area.
 
 	ADR	R0,SpriteVariable		; First, identify if the system variable <WinScroll$Sprites> is set.
-	ADRW	R1,WS_Block			; If not, we must use the default sprite areas from inside the module.
+	ADD	R1,R12,#WS_Block			; If not, we must use the default sprite areas from inside the module.
 	MOV	R2,#255
 	MOV	R3,#0
 	MOV	R4,#0
@@ -752,7 +752,9 @@ InitSpritesLoadFile
 	MOV	R3,#16
 	STR	R3,[R2,#8]
 
-	SWP	R1,R2				; Load the sprite file into memory.
+	EOR	R1,R1,R2			; SWAP R1,R2
+	EOR	R2,R1,R2			; Load the sprite file into memory.
+	EOR	R1,R1,R2
 	MOV	R0,#&0A
 	ORR	R0,R0,#&100
 	SWI	XOS_SpriteOp
@@ -774,7 +776,7 @@ InitSpritesInternal
 	ADRNEL	R0,sprite_area_lo
 
 InitSpritesNameBuffer
-	ADRW	R1,WS_IconDef			; Store the sprite area pointer, from the last block of code,
+	ADD	R1,R12,#WS_IconDef			; Store the sprite area pointer, from the last block of code,
 	STR	R0,[R1,#28]			; into the icon definition.
 
 	MOV	R0,#12				; Set the length of the sprite name buffer.
@@ -784,7 +786,7 @@ InitSpritesNameBuffer
 
 ; Set R1 up to be the block pointer.
 
-	ADRW	R1,WS_Block
+	ADD	R1,R12,#WS_Block
 
 ; ----------------------------------------------------------------------------------------------------------------------
 
@@ -914,7 +916,7 @@ StartScroll
 	BIC	R1,R1,#1
 
 	LDR	R2,[R1,#32]
-	ADRW	R1,WS_IconDef
+	ADD	R1,R12,#WS_IconDef
 
 StartScrollBoth
 	TST	R2,#&10000000
@@ -962,7 +964,7 @@ StartScrollNone
 StartCreate
 ; Get the details about the window below the pointer.
 
-	ADRW	R1,WS_Block
+	ADD	R1,R12,#WS_Block
 
 	LDR	R0,[R12,#WS_WindowHandle]
 	STR	R0,[R1,#0]
@@ -989,7 +991,7 @@ StartCreate
 
 	MOV	R0,#36
 	ORR	R0,R0,#&100
-	ADRW	R1,WS_IconDef
+	ADD	R1,R12,#WS_IconDef
 	LDR	R1,[R1,#28]
 	ADRL	R2,SpriteNamePtrScroll
 	MOV	R3,#%0100010
@@ -1005,7 +1007,7 @@ StartCreate
 	MOV	R1,#-1
 	SWI	Wimp_CreateMenu
 
-.StartScrollExit
+StartScrollExit
 	LDMFD	R13!,{R0-R7,PC}
 
 ; ----------------------------------------------------------------------------------------------------------------------
@@ -1232,7 +1234,7 @@ Div2
 
 	SUB	R2,R2,#1
 	EOR	R2,R2,R5
-.DivExit
+DivExit
 ;	MOV	R1,R0
 	MOV	R3,R2
 
