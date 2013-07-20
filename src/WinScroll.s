@@ -64,7 +64,7 @@ OS_GenerateError			EQU	&00002B
 OS_Byte					EQU	&000006
 OS_Claim				EQU	&00001F
 OS_ReadArgs				EQU	&000049
-OS_ReadMonotonicTime			EQU	&000020
+OS_ReadMonotonicTime			EQU	&000042
 OS_Release				EQU	&000020
 OS_SpriteOp				EQU	&00002E
 Wimp_CloseWindow			EQU	&0400C6
@@ -430,7 +430,7 @@ FinalCode
 	BLE	FinalFreeWS
 
 	LDR	R1,Task
-	SWI	Wimp_CloseDown
+	SWI	XWimp_CloseDown
 	MOV	R1,#0
 	STR	R1,[R12,#WS_TaskHandle]
 
@@ -479,7 +479,7 @@ ServiceStartWimp
 
 	LDR	R14,[R12,#WS_TaskHandle]
 	TEQ	R14,#0
-	MOVEQ	R14,#NOT-1
+	MVNEQ	R14,#-1					; Think this ought to be MOVEQ R14,#-1 ?
 	STREQ	R14,[R12,#WS_TaskHandle]
 	ADREQ	R0,CommandDesktop
 	MOVEQ	R1,#0
@@ -592,8 +592,8 @@ TaskName
 	DCB	"Windows Scroll",0
 
 MisusedStartCommand
-	DCD	0
-	DCB	"Use *Desktop to start WinScroll.",0
+	;DCD	0								; \TODO -- Fix once complete.
+	DCB	0, 0, 0, 0, "Use *Desktop to start WinScroll.",0		; \TODO -- Fix once complete.
 	ALIGN
 
 HiResSuffix
@@ -643,7 +643,8 @@ IconDefinition
 
 TaskCode
 	LDR	R12,[R12]
-	ADD	R13,R12,#WS_Size+4			; Set the stack up.
+	ADD	R13,R12,#WS_Size	;+4		; Set the stack up.	; \TODO -- Fix once complete.
+	ADD	R13,R13,#4							; \TODO -- Fix once complete.
 
 ; Check that we aren't in the desktop.
 
@@ -776,7 +777,7 @@ InitSpritesInternal
 	ADRNEL	R0,sprite_area_lo
 
 InitSpritesNameBuffer
-	ADD	R1,R12,#WS_IconDef			; Store the sprite area pointer, from the last block of code,
+	ADD	R1,R12,#WS_IconDef		; Store the sprite area pointer, from the last block of code,
 	STR	R0,[R1,#28]			; into the icon definition.
 
 	MOV	R0,#12				; Set the length of the sprite name buffer.
@@ -817,7 +818,7 @@ PollNullEndScroll
 	B	PollLoopEnd
 
 PollNullDoScroll
-	TST	R2,#(Flag_StartReq :OR: Flag_StopReq)
+	TST	R2,#(Flag_HScrolling :OR: Flag_VScrolling)
 	BEQ	PollLoopEnd
 
 	BL	DoScroll
@@ -994,7 +995,7 @@ StartCreate
 	ADD	R1,R12,#WS_IconDef
 	LDR	R1,[R1,#28]
 	ADRL	R2,SpriteNamePtrScroll
-	MOV	R3,#%0100010
+	MOV	R3,#2_0100010
 	MOV	R4,#6
 	MOV	R5,#6
 	MOV	R6,#0
@@ -1155,7 +1156,7 @@ EndScroll
 
 	MOV	R0,#36
 	ADRL	R2,SpriteNamePtrDefault
-	MOV	R3,#%0100001
+	MOV	R3,#2_0100001
 	MOV	R4,#0
 	MOV	R5,#0
 	MOV	R6,#0
