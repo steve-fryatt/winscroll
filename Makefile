@@ -97,8 +97,10 @@ OUTDIR := build
 
 # Set up the named target files.
 
+APP := !WinScroll
 RUNIMAGE := WinScroll,ffa
 README := ReadMe,fff
+TEXTHELP := !Help,fff
 LICENSE := Licence,fff
 
 
@@ -119,16 +121,16 @@ all: application documentation
 
 # Build the application and its supporting binary files.
 
-application: $(OUTDIR)/$(RUNIMAGE)
+application: $(OUTDIR)/$(APP)/$(RUNIMAGE)
 
 
 # Build the complete !RunImage from the object files.
 
 OBJS := $(addprefix $(OBJDIR)/, $(OBJS))
 
-$(OUTDIR)/$(RUNIMAGE): $(OBJS) $(OBJDIR)
-	$(STRIP) $(STRIPFLAGS) -o $(OUTDIR)/$(RUNIMAGE) $(OBJS)
-	armalyser -d -o Compare/new.txt $(OUTDIR)/$(RUNIMAGE)
+$(OUTDIR)/$(APP)/$(RUNIMAGE): $(OBJS) $(OBJDIR)
+	$(STRIP) $(STRIPFLAGS) -o $(OUTDIR)/$(APP)/$(RUNIMAGE) $(OBJS)
+	armalyser -d -o Compare/new.txt $(OUTDIR)/$(APP)/$(RUNIMAGE)
 
 # Create a folder to hold the object files.
 
@@ -145,17 +147,20 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.s
 
 # Build the documentation
 
-documentation: $(OUTDIR)/$(README)
+documentation: $(OUTDIR)/$(APP)/$(TEXTHELP) $(OUTDIR)/$(README)
 
-$(OUTDIR)/$(README): $(MANUAL)/$(MANSRC)
-	$(TEXTMAN) -I$(MANUAL)/$(MANSRC) -O$(OUTDIR)/$(README) -D'version=$(HELP_VERSION)' -D'date=$(HELP_DATE)'
+$(OUTDIR)/$(APP)/$(TEXTHELP): $(MANUAL)/$(MANSRC)
+	$(TEXTMAN) -I$(MANUAL)/$(MANSRC) -O$(OUTDIR)/$(APP)/$(TEXTHELP) -D'version=$(HELP_VERSION)' -D'date=$(HELP_DATE)'
+
+$(OUTDIR)/$(README): $(OUTDIR)/$(APP)/$(TEXTHELP) $(MANUAL)/$(READMEHDR)
+	$(TEXTMERGE) $(OUTDIR)/$(README) $(OUTDIR)/$(APP)/$(TEXTHELP) $(MANUAL)/$(READMEHDR) 5
 
 
 # Build the release Zip file.
 
 release: clean all
 	$(RM) ../$(ZIPFILE)
-	(cd $(OUTDIR) ; $(ZIP) $(ZIPFLAGS) ../../$(ZIPFILE) $(RUNIMAGE) $(README) $(LICENSE))
+	(cd $(OUTDIR) ; $(ZIP) $(ZIPFLAGS) ../../$(ZIPFILE) $(APP) $(README) $(LICENSE))
 	$(RM) ../$(SRCZIPFILE)
 	$(ZIP) $(SRCZIPFLAGS) ../$(SRCZIPFILE) $(OUTDIR) $(SRCDIR) $(MANUAL) Makefile
 
@@ -171,5 +176,6 @@ backup:
 
 clean:
 	$(RM) $(OBJDIR)/*
-	$(RM) $(OUTDIR)/$(RUNIMAGE)
+	$(RM) $(OUTDIR)/$(APP)/$(RUNIMAGE)
+	$(RM) $(OUTDIR)/$(APP)/$(TEXTHELP)
 	$(RM) $(OUTDIR)/$(README)

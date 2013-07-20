@@ -1,0 +1,41 @@
+| >!Run
+|
+| Copyright 2002-2013, Stephen Fryatt (info@stevefryatt.org.uk)
+|
+| This file is part of WinScroll:
+|
+|   http://www.stevefryatt.org.uk/software/
+|
+| Licensed under the EUPL, Version 1.1 only (the "Licence");
+| You may not use this work except in compliance with the
+| Licence.
+|
+| You may obtain a copy of the Licence at:
+|
+|   http://joinup.ec.europa.eu/software/page/eupl
+|
+| Unless required by applicable law or agreed to in
+| writing, software distributed under the Licence is
+| distributed on an "AS IS" basis, WITHOUT WARRANTIES
+| OR CONDITIONS OF ANY KIND, either express or implied.
+|
+| See the Licence for the specific language governing
+| permissions and limitations under the Licence.
+
+| --------------------------------------------------------------------------
+| Obey file to configure and run the WinScroll module.
+|
+| Uncomment this line and set the sprite file path up correctly to use
+| alternative sprites.  Watch out for trailing spaces in the filename!
+|
+| Set WinScroll$Sprites <Obey$Dir>.Sprites
+
+RMRun <Obey$Dir>.WinScroll
+
+| Uncomment this line and set the options as required.  For example:
+| "-Speed 40 -Square" is a sensible set of options to do non-linear scrolls.
+| "-Speed 1" would produce faster linear scrolling than the default.
+| "-Modifier 9" would set the invocation to Select-Menu.
+| Use as many *WinScrollConfigure commands as required.
+|
+| WinScrollConfigure -Speed 40 -Square
