@@ -985,7 +985,7 @@ StartCreate
 	STR	R3,[R1,#16]
 
 	MOV	R0,#-1
-	STR	R0,[R1,#24]
+	STR	R0,[R1,#28]
 	SWI	Wimp_OpenWindow
 
 ; Set the mouse pointer.
