@@ -107,6 +107,8 @@ LICENSE := Licence,fff
 MANSRC := Source
 MANSPR := ManSprite
 READMEHDR := Header
+SPRITES := Sprites,ff9
+SPRITES22 := Sprites22,ff9
 
 OBJS := WinScroll.o
 
@@ -136,7 +138,7 @@ $(OBJDIR):
 # Build the object files, and identify their dependencies.
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.s
-	$(AS) $(ASFLAGS) -PreDefine 'BuildDate SETS "\"$(BUILD_DATE)\""' -PreDefine 'BuildVersion SETS "\"$(VERSION)\""' -o $@ $<
+	$(AS) $(ASFLAGS) -Predefine 'Sprites SETS "$(SRCDIR)/$(SPRITES)"' -Predefine 'Sprites22 SETS "$(SRCDIR)/$(SPRITES22)"' -PreDefine 'BuildDate SETS "\"$(BUILD_DATE)\""' -PreDefine 'BuildVersion SETS "\"$(VERSION)\""' -o $@ $<
 
 #$(OUTDIR)/$(GETTIME): $(SRCDIR)/gettime.c
 #	$(CC) $(SRCDIR)/gettime.c -o $(OUTDIR)/$(GETTIME)

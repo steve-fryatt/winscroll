@@ -592,15 +592,15 @@ TaskName
 	DCB	"Windows Scroll",0
 
 MisusedStartCommand
-	;DCD	0								; \TODO -- Fix once complete.
-	DCB	0, 0, 0, 0, "Use *Desktop to start WinScroll.",0		; \TODO -- Fix once complete.
+	DCDU	0								; \TODO -- Fix once complete.
+	DCB	"Use *Desktop to start WinScroll.",0
 	ALIGN
 
 HiResSuffix
 	DCD	&00003232 ; "22"
 
 SpriteVariable
-	DCB	"WinScroll$Sprites",0
+	DCB	"WinScroll$$Sprites",0
 	ALIGN
 
 SpriteFiletype
@@ -773,8 +773,8 @@ InitSpritesInternal
 	BIC	R0,R0,#&FF000000
 	LDR	R2,HiResSuffix
 	TEQ	R0,R2
-	ADREQL	R0,sprite_area_hi
-	ADRNEL	R0,sprite_area_lo
+	ADREQL	R0,SpriteAreaHi
+	ADRNEL	R0,SpriteAreaLo
 
 InitSpritesNameBuffer
 	ADD	R1,R12,#WS_IconDef		; Store the sprite area pointer, from the last block of code,
@@ -1241,33 +1241,17 @@ DivExit
 
 	LDMFD	R13!,{R0-R2,R4-R5,PC}
 
-
 ; ======================================================================================================================
+; Import the two sprite areas.
 
-; .sprite_area_lo
-;           FNload_sprites("<BASIC$Dir>.Sprites")
+SpriteAreaLo
+	DCD	SpriteAreaLoEnd - SpriteAreaLo
+	INCBIN	$Sprites
+SpriteAreaLoEnd
 
-; .sprite_area_hi
-;          FNload_sprites("<BASIC$Dir>.Sprites22")
-
+SpriteAreaHi
+	DCD	SpriteAreaHiEnd - SpriteAreaHi
+	INCBIN	$Sprites22
+SpriteAreaHiEnd
 
 	END
-
-
-
-;DEF FNload_sprites(file$)
-;:
-;LOCAL type%,size%,file%
-;:
-;SYS "OS_File",17,file$ TO type%,,,,size%
-;!O%=size%+4
-;O%+=4 : P%+=4
-;:
-;file%=OPENIN(file$)
-;WHILE NOT EOF#file%
-; ?O%=BGET#file%
-; O%+=1 : P%+=1
-;ENDWHILE
-;CLOSE#file%
-;:
-;=0
