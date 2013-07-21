@@ -165,6 +165,8 @@ The issues I am aware of at present are:
 <li>Changes to the mouse pointer can be overridden by other applications as the mouse passes over their windows.
 
 <li>Composite windows, where the scroll bars are on a separate window to the one containing the document, will not work as <cite>Windows Scroll</cite> can not see the scroll bars and so will not agree to scroll the window.  <cite>Impression</cite> and <cite>Personal Accounts</cite> are two 'offenders' that I know of.
+
+<li>Mouse clicks should be filtered out while the scroll is active, so that the terminating click does not affect the window below the pointer.
 </list>
 
 </chapter>
@@ -218,7 +220,6 @@ Public Beta release.
 
 <list>
 <li>Corrected window stack flags to work correctly on Select.
-<li>Filters out mouse clicks while the scroll is active, to prevent the terminating click affecting the window below.
 </list>
 
 </chapter>
