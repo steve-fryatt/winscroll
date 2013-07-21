@@ -141,9 +141,6 @@ $(OBJDIR):
 $(OBJDIR)/%.o: $(SRCDIR)/%.s
 	$(AS) $(ASFLAGS) -Predefine 'Sprites SETS "$(SRCDIR)/$(SPRITES)"' -Predefine 'Sprites22 SETS "$(SRCDIR)/$(SPRITES22)"' -PreDefine 'BuildDate SETS "\"$(BUILD_DATE)\""' -PreDefine 'BuildVersion SETS "\"$(VERSION)\""' -o $@ $<
 
-#$(OUTDIR)/$(GETTIME): $(SRCDIR)/gettime.c
-#	$(CC) $(SRCDIR)/gettime.c -o $(OUTDIR)/$(GETTIME)
-
 # Build the documentation
 
 documentation: $(OUTDIR)/$(APP)/$(TEXTHELP) $(OUTDIR)/$(README)
