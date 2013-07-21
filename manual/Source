@@ -10,7 +10,7 @@
 =============================================================================
 Windows Scroll - Scroll around windows using the mouse           Version $$version$$
 
-(C) Stephen Fryatt, 2002                       $$date$$
+(C) Stephen Fryatt, 2002-2013                  $$date$$
 =============================================================================
 </literal>
 
@@ -52,9 +52,9 @@ There are still things to be done to <cite>Windows Scroll</cite>: see <link ref=
 
 <chapter title="Installation and use" file="Using">
 
-To install <cite>Windows Scroll</cite>, copy the <file>WinScroll</file> module on to your hard disc and then double-click on it to run it.  If you want to use <cite>Windows Scroll</cite> permanently, add it to your machine's boot sequence.
+To install <cite>Windows Scroll</cite>, copy the <file>!WinScroll</file> application on to your hard disc and then double-click on it to run it.  If you want to use <cite>Windows Scroll</cite> permanently, add it to your machine's boot sequence.
 
-The <file>RunWS</file> Obey file included in the archive can be used if you wish to change the <cite>WinScroll</cite> configuration (speed, key-presses or sprites) by default.  It should be in the same directory as the <file>WinScroll</file> module; you may wish to create a specific directory and then place non-standard sprite files here as well.
+The <file>!WinScroll.!Run</file> file inside the application can be modified if you wish to change the <cite>WinScroll</cite> configuration (speed, key-presses or sprites). Double-click on <file>!WinScroll</file> with <key>shift</key> held down to open the application folder, then double-click on <file>!Run</file> with <key>shift</key> held down to load it into a text editor. The comments in the file, in conjunction with the <link ref="Config">Configuration and options</link> section below, should explain the possibilities. Save the file and double-click on <file>!WinScroll</file> again to use the settings.
 
 Once installed, clicking <key>ctrl</key>-<mouse>menu</mouse> over a window with scroll-bars will open a small <window>arrow window</window> under the mouse pointer.  This contains a 'centre point' and a set of arrows indicating which scroll directions are possible (this depends on which scroll bars are present on the original window).  Moving the mouse away from the point in the direction of one of the arrows will cause the window to scroll in that direction; the further the mouse is moved, the faster the scroll.
 
@@ -216,10 +216,12 @@ Public Beta release.
 </list>
 
 
-<subhead title="0.60 (12 October 2003)">
+<subhead title="Test Build">
 
 <list>
-<li>Corrected window stack flags to work correctly on Select.
+<li>Corrected window stack flags to work properly on Select and RISC&nbsp;OS&nbsp;5.
+<li>Converted source to ObjAsm format and checked for ARMv7 compatibility.
+<li>Restructured archive contents into application format for ease of installation.
 </list>
 
 </chapter>
