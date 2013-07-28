@@ -147,12 +147,20 @@ CommandDesktop
 
 	LDR	R14,[R12,#WS_TaskHandle]
 	CMN	R14,#1
-	ADRNE	R0,DesktopMisused
-	MSRNE	CPSR_f, #9 << 28
-	LDMNEFD	R13!,{PC}
+	BEQ	CommandDesktopOK
+	
+CommandDesktopError
+	ADR	R0,DesktopMisused
+	TEQ	R0,R0
+	TEQ	PC,PC
+	LDMNEFD	R13!,{R14}
+	ORRNES	PC,R14,#9 << 28
+	MSR	CPSR_f, #9 << 28
+	LDMFD	R13!,{PC}
 
 	; Pass *Desktop_WinScroll to OS_Module.
 
+CommandDesktopOK
 	MOV	R2,R0
 	ADR	R1,TitleString
 	MOV	R0,#2
