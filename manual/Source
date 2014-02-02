@@ -10,7 +10,7 @@
 =============================================================================
 Windows Scroll - Scroll around windows using the mouse           Version $$version$$
 
-(C) Stephen Fryatt, 2002-2013                  $$date$$
+(C) Stephen Fryatt, 2002-2014                  $$date$$
 =============================================================================
 
 </literal>
@@ -23,11 +23,11 @@ Windows Scroll - Scroll around windows using the mouse           Version $$versi
 
 <chapter title="Licence" file="Licence">
 
-<cite>Windows Scroll</cite> is licensed under the EUPL, Version&nbsp;1.1 only (the "Licence"); you may not use this work except in compliance with the Licence.
+<cite>Windows Scroll</cite> is licensed under the EUPL, Version&nbsp;1.1 only (the &ldquo;Licence&rdquo;); you may not use this work except in compliance with the Licence.
 
 You may obtain a copy of the Licence at <link ref="#url http://joinup.ec.europa.eu/software/page/eupl">http://joinup.ec.europa.eu/software/page/eupl</link>
 
-Unless required by applicable law or agreed to in writing, software distributed under the Licence is distributed on an &quot;<strong>as is</strong>&quot; basis, <strong>without warranties or conditions of any kind</strong>, either express or implied.
+Unless required by applicable law or agreed to in writing, software distributed under the Licence is distributed on an &ldquo;<strong>as is</strong>&rdquo; basis, <strong>without warranties or conditions of any kind</strong>, either express or implied.
 
 See the Licence for the specific language governing permissions and limitations under the Licence.
 
@@ -42,7 +42,7 @@ The necessary libraries and build tools can be found at <link ref="#url http://w
 
 <chapter title="Introduction" file="Introduction">
 
-<cite>Windows Scroll</cite> is a small module for RISC OS to provide the kind of scrolling that is available on <cite>MS Windows</cite> when the wheel button of the mouse is pressed.  It does not, however, need a wheel mouse to work.
+<cite>Windows Scroll</cite> is a small module for RISC&nbsp;OS to provide the kind of scrolling that is available on <cite>MS Windows</cite> when the wheel button of the mouse is pressed.  It does not, however, need a wheel mouse to work.
 
 There are still things to be done to <cite>Windows Scroll</cite>: see <link ref="Issues">Known issues</link> for details.
 
@@ -53,11 +53,11 @@ There are still things to be done to <cite>Windows Scroll</cite>: see <link ref=
 
 <chapter title="Installation and use" file="Using">
 
-To install <cite>Windows Scroll</cite>, copy the <file>!WinScroll</file> application on to your hard disc and then double-click on it to run it.  If you want to use <cite>Windows Scroll</cite> permanently, add it to your machine's boot sequence.
+To install <cite>Windows Scroll</cite>, copy the <file>!WinScroll</file> application on to your hard disc and then double-click on it to run it.  If you want to use <cite>Windows Scroll</cite> permanently, add it to your machine&rsquo;s boot sequence.
 
 The <file>!WinScroll.!Run</file> file inside the application can be modified if you wish to change the <cite>WinScroll</cite> configuration (speed, key-presses or sprites). Double-click on <file>!WinScroll</file> with <key>shift</key> held down to open the application folder, then double-click on <file>!Run</file> with <key>shift</key> held down to load it into a text editor. The comments in the file, in conjunction with the <link ref="Config">Configuration and options</link> section below, should explain the possibilities. Save the file and double-click on <file>!WinScroll</file> again to use the settings.
 
-Once installed, clicking <key>ctrl</key>-<mouse>menu</mouse> over a window with scroll-bars will open a small <window>arrow window</window> under the mouse pointer.  This contains a 'centre point' and a set of arrows indicating which scroll directions are possible (this depends on which scroll bars are present on the original window).  Moving the mouse away from the point in the direction of one of the arrows will cause the window to scroll in that direction; the further the mouse is moved, the faster the scroll.
+Once installed, clicking <key>ctrl</key>-<mouse>menu</mouse> over a window with scroll-bars will open a small <window>arrow window</window> under the mouse pointer.  This contains a &lsquo;centre point&rsquo; and a set of arrows indicating which scroll directions are possible (this depends on which scroll bars are present on the original window).  Moving the mouse away from the point in the direction of one of the arrows will cause the window to scroll in that direction; the further the mouse is moved, the faster the scroll.
 
 To stop the scrolling, click the mouse (doing this over the <window>arrow window</window> will prevent the mouse click being registered anywhere else).
 
@@ -83,9 +83,9 @@ The options available are as follows:
 The <command>-button &lt;number&gt;</command> option sets the mouse button used to invoke the scrolling (when pressed along with the modifier key).  The value passed is one of:
 
 <list>
-<li>4 - <mouse>select</mouse>
-<li>2 - <mouse>menu</mouse>
-<li>1 - <mouse>adjust</mouse>
+<li>4 &ndash; <mouse>select</mouse>
+<li>2 &ndash; <mouse>menu</mouse>
+<li>1 &ndash; <mouse>adjust</mouse>
 </list>
 
 For example: <code>-Button 2</code> would set the <mouse>menu</mouse> button.
@@ -94,15 +94,15 @@ The default button is <mouse>menu</mouse>.  Using other buttons is not recommend
 </definition>
 
 <definition target="-Modifier">
-The <command>-modifier &lt;key number&gt;</command> option sets the key that must be pressed with the chosen mouse button to start a scroll.  The value passed is an 'Internal key number', a list of which can be found in the PRMs or StrongHelp Manuals; the most useful codes are:
+The <command>-modifier &lt;key number&gt;</command> option sets the key that must be pressed with the chosen mouse button to start a scroll.  The value passed is an &lsquo;Internal key number&rsquo;, a list of which can be found in the PRMs or StrongHelp Manuals; the most useful codes are:
 
 <list>
-<li>0 - <key>shift</key> (either, but 3 - left, 6 - right)
-<li>1 - <key>ctrl</key> (either, but 4 - left, 7 - right)
-<li>2 - <key>alt</key> (either, but 5 - left, 8 - right)
-<li>9 - <mouse>select</mouse>
-<li>10 - <mouse>menu</mouse>
-<li>11 - <mouse>adjust</mouse>
+<li>0 &ndash; <key>shift</key> (either, but 3 &ndash; left, 6 &ndash; right)
+<li>1 &ndash; <key>ctrl</key> (either, but 4 &ndash; left, 7 &ndash; right)
+<li>2 &ndash; <key>alt</key> (either, but 5 &ndash; left, 8 &ndash; right)
+<li>9 &ndash; <mouse>select</mouse>
+<li>10 &ndash; <mouse>menu</mouse>
+<li>11 &ndash; <mouse>adjust</mouse>
 </list>
 
 For example: <code>-Modifier 4</code> would set the left <key>ctrl</key> key as the modifier.
@@ -130,7 +130,7 @@ An example command might be
 *WinScrollConfigure -Speed 40 -Square
 </codeblock>
 
-to set 'square-response' scrolling at a sensible speed factor, or
+to set &lsquo;square-response&rsquo; scrolling at a sensible speed factor, or
 
 <codeblock>
 *WinScrollConfigure -Modifier 9
@@ -152,20 +152,20 @@ See the sprite files in the <file>Source</file> directory for details about what
 
 <chapter title="Known issues" file="Issues">
 
-<cite>Windows Scroll</cite> is still in development, and there are a number of known problems.  If anyone find the application useful, I will deal with these.
+<cite>Windows Scroll</cite> is still in development, and there are a number of known problems.  If anyone finds the application useful, I will deal with these.
 
 In addition, the interface (in particular the invocation keys) are up for alternative suggestions.  I would also appreciate bug reports or suggestions for improvements.  My email address is at the end of this file.
 
 The issues I am aware of at present are:
 
 <list>
-<li>Scroll area bounds are not checked before Open Window requests are sent to applications.  This is not an issue on RISC OS 4, but I have not tested it on earlier versions.  It is easily fixable.
+<li>Scroll area bounds are not checked before Open Window requests are sent to applications.  This is not an issue on RISC&nbsp;OS&nbsp;4, but I have not tested it on earlier versions.  It is easily fixable.
 
 <li>The way in which menus from Toolbox applications are dealt with is still not ideal (simply calling <code>Wimp_CreateMenu,-1</code> to close them when the open).
 
 <li>Changes to the mouse pointer can be overridden by other applications as the mouse passes over their windows.
 
-<li>Composite windows, where the scroll bars are on a separate window to the one containing the document, will not work as <cite>Windows Scroll</cite> can not see the scroll bars and so will not agree to scroll the window.  <cite>Impression</cite> and <cite>Personal Accounts</cite> are two 'offenders' that I know of.
+<li>Composite windows, where the scroll bars are on a separate window to the one containing the document, will not work as <cite>Windows Scroll</cite> can not see the scroll bars and so will not agree to scroll the window.  <cite>Impression</cite> and <cite>Personal Accounts</cite> are two &lsquo;offenders&rsquo; that I know of.
 
 <li>Mouse clicks should be filtered out while the scroll is active, so that the terminating click does not affect the window below the pointer.
 </list>
@@ -200,7 +200,7 @@ This version was not released.
 <list>
 <li>Added low and hi-res sprites and changed design to be all-black arrows.
 <li>The &lt;WinScroll$Sprites&gt; system variable is added, to allow for user-defined sprites at run-time.
-<li>'Linear' and 'Square' speed controls added.
+<li>&lsquo;Linear&rsquo; and &lsquo;Square&rsquo; speed controls added.
 <li>*WinScrollConfigure added, with support for -Key, -Modifier, -Speed and -Linear/-Square.
 <li>Any mouse-click now terminates the scroll function.
 <li>Menus opened by the ToolBox are now closed.
@@ -217,7 +217,7 @@ Public Beta release.
 </list>
 
 
-<subhead title="Test Build">
+<subhead title="0.52 (2 February 2014)">
 
 <list>
 <li>Corrected window stack flags to work properly on Select and RISC&nbsp;OS&nbsp;5.
