@@ -68,10 +68,7 @@ ZIP := /home/steve/GCCSDK/env/bin/zip
 
 SFBIN := /home/steve/GCCSDK/sfbin
 
-TEXTMAN := $(SFBIN)/textman
-STRONGMAN := $(SFBIN)/strongman
-HTMLMAN := $(SFBIN)/htmlman
-DDFMAN := $(SFBIN)/ddfman
+MANTOOLS := $(SFBIN)/mantools
 BINDHELP := $(SFBIN)/bindhelp
 TEXTMERGE := $(SFBIN)/textmerge
 MENUGEN := $(SFBIN)/menugen
@@ -146,7 +143,7 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.s
 documentation: $(OUTDIR)/$(APP)/$(TEXTHELP) $(OUTDIR)/$(README)
 
 $(OUTDIR)/$(APP)/$(TEXTHELP): $(MANUAL)/$(MANSRC)
-	$(TEXTMAN) -I$(MANUAL)/$(MANSRC) -O$(OUTDIR)/$(APP)/$(TEXTHELP) -D'version=$(HELP_VERSION)' -D'date=$(HELP_DATE)'
+	$(MANTOOLS) -MTEXT -I$(MANUAL)/$(MANSRC) -O$(OUTDIR)/$(APP)/$(TEXTHELP) -D'version=$(HELP_VERSION)' -D'date=$(HELP_DATE)'
 
 $(OUTDIR)/$(README): $(OUTDIR)/$(APP)/$(TEXTHELP) $(MANUAL)/$(READMEHDR)
 	$(TEXTMERGE) $(OUTDIR)/$(README) $(OUTDIR)/$(APP)/$(TEXTHELP) $(MANUAL)/$(READMEHDR) 5
