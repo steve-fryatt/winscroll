@@ -1,4 +1,4 @@
-# Copyright 2013-2016, Stephen Fryatt (info@stevefryatt.org.uk)
+# Copyright 2013-2020, Stephen Fryatt (info@stevefryatt.org.uk)
 #
 # This file is part of WinScroll:
 #
@@ -36,6 +36,9 @@ SRCDIR := src
 EXTRASRCPREREQ := $(SRCDIR)/$(SPRITES) $(SRCDIR)/$(SPRITES22)
 
 ASOPTIONS := -Predefine 'Sprites SETS "$(SRCDIR)/$(SPRITES)"' -Predefine 'Sprites22 SETS "$(SRCDIR)/$(SPRITES22)"'
+
+PACKAGE := WinScroll
+PACKAGELOC := Desktop
 
 OBJS := WinScroll.o
 

@@ -1,0 +1,18 @@
+Package: WinScroll
+Version: 0.52-1
+Section: Desktop
+Priority: Optional
+Maintainer: Stephen Fryatt <info@stevefryatt.org.uk>
+Standards-Version: 0.6.0
+Environment: arm
+Licence: Free
+Description: Pan around any window on the desktop
+ Windows Scroll is a small module to provide the 'joystick-like' window
+ scrolling, using the mouse, as found on some MS Windows applications.
+ Clicking Ctrl-Menu over a window with scroll bars will allow the window to be
+ scrolled at variable speed by moving the mouse away from a 'centre point' on
+ the screen.
+ .
+ It does not require a wheel-mouse to work.
+Homepage: http://www.stevefryatt.org.uk/software/utils/
+Components: Apps.Desktop.!WinScroll (Movable)
